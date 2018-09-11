@@ -4,7 +4,7 @@
 
 typedef unsigned short int color_t;
 
-#define RGB(R, G, B) (((R & 0x1F) << 11) | ((G & 0x3F) << 5) | (B &0x1F));
+#define RGB(R, G, B) (((R & 0x1F) << 11) | ((G & 0x3F) << 5) | (B &0x1F))
 
 void init_graphics();
 void exit_graphics();
