@@ -1,6 +1,4 @@
 //graphics.h - project 1 - emh128
-#ifndef GRAPHICS
-#define GRPAHICS
 
 typedef unsigned short int color_t;
 
@@ -15,5 +13,3 @@ void draw_pixel(void *img, int x, int y, color_t color);
 void draw_line(void *img, int x1, int y1, int x2, int y2, color_t c);
 void* new_offscreen_buffer();
 void blit(void *src);
-
-#endif
