@@ -75,8 +75,7 @@ void clear_screen(void *img) {
 }
 
 void draw_pixel(void *img, int x, int y, color_t color) {
-    color_t* pixel = (framebuffer + (y * linelength + x));
-    *pixel = color;
+
 }
 
 void draw_line(void *img, int x1, int y1, int x2, int y2, color_t c) {
