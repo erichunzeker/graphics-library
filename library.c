@@ -80,7 +80,9 @@ void draw_pixel(void *img, int x, int y, color_t color) {
 }
 
 void draw_line(void *img, int x1, int y1, int x2, int y2, color_t c) {
-    //draw mfkn line
+
+    draw_pixel(img, x1, y1, c);
+    draw_pixel(img, x2, y2, c);
 }
 
 void* new_offscreen_buffer() {
@@ -92,7 +94,7 @@ void blit(void *src) {
     //copy every byte from *src buffer to framebuffer
     int i;
     for (i = 0; i < memsize; i++) {
-        *(i + (char *) (framebuffer)) = *(i + (char *) (src)); //get single byte in form of char
+        *(i + (char *) (fb_pointer)) = *(i + (char *) (src)); //get single byte in form of char
     }
 
 
