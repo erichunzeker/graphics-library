@@ -56,11 +56,13 @@ char getkey() {
     fd_set fdSet;
     FD_ZERO(&fdSet);
     FD_SET(0, &fdSet);
+    struct timeval timeval1;
+    timeval1.tv_sec = 1;
     char input;
     //not setting a timeout because its unnecessary
-    if(select(STDIN_FILENO + 1, &fdSet, NULL, NULL, NULL) > 0)
-        read(0, &input, 1);
-    return input;
+    if(select(STDIN_FILENO + 1, &fdSet, NULL, NULL, &timeval1) > 0 && read(0, &input, 1) > 0)
+        return input;
+    return 0;
 }
 
 void sleep_ms(long ms) {
@@ -70,7 +72,7 @@ void sleep_ms(long ms) {
 }
 
 void clear_screen(void *img) {
-    write(STDOUT_FILENO, "\033[2J", 4);
+    write(1, "\033[2J", 8);
 }
 
 void draw_pixel(void *img, int x, int y, color_t color) {

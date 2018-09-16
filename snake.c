@@ -5,6 +5,8 @@
 int direction = 0;
 int curr_x = 0;
 int curr_y = 0;
+int snakex = 1;
+int snakey= 1;
 
 void turn_left(int degrees)
 {
@@ -52,42 +54,90 @@ void hilbert_recurse(void *img, int n, int parity, int dist)
     turn_left(parity * 90);
 }
 
-void hilbert(void *img, int n, int parity)
-{
-    hilbert_recurse(img, n, parity, 479 / (1 << n));
-}
-
 int main(int argc, char **argv)
 {
-    int i;
-
     init_graphics();
 
-    //Construct an offscreen buffer to draw to
     void *buf = new_offscreen_buffer();
 
     char key;
-    int n = 1;
 
-    //Draw the simple U shape
-    hilbert(buf, n, +1);
-    blit(buf);
+    int right = 1;
+    int left = 0;
+    int down = 0;
+    int up = 0;
+
+    int oldsnakex = -1;
+    int oldsnakey = -1;
 
     do {
-        curr_x = 0;
-        curr_y = 0;
+        if(oldsnakex != -1)
+            draw_pixel(buf, oldsnakex, oldsnakey, RGB(0, 0, 0));
+        draw_pixel(buf, snakex, snakey, RGB(31, 0, 0));
+        blit(buf);
+
+        oldsnakex = snakex;
+        oldsnakey = snakey;
+
+
+        if(right == 1 && snakex == 639) {
+            right = 0;
+            left = 1;
+            down = 0;
+            up = 0;
+        } else if(left == 1 && snakex == 0) {
+            right = 1;
+            left = 0;
+            down = 0;
+            up = 0;
+        } else if(up == 1 && snakey == 0) {
+            right = 0;
+            left = 0;
+            down = 1;
+            up = 0;
+        }else if(down == 1 && snakey == 479) {
+            right = 0;
+            left = 0;
+            down = 0;
+            up = 1;
+        }
+
+        if(right == 1 && snakex < 640)
+            snakex = snakex + 1;
+        else if(left == 1 && snakex > 0)
+            snakex = snakex - 1;
+        else if(up == 1 && snakey > 0)
+            snakey = snakey - 1;
+        else if(down == 1 && snakey < 480)
+            snakey = snakey + 1;
+
 
         key = getkey();
+
         if (key == 'q')
             break;
-            //Make it more interesting
-        else if (key == '+') {
-            n++;
-            clear_screen(buf);
-            hilbert(buf, n, +1);
-            blit(buf);
+        else if(key == 'w') {
+            right = 0;
+            left = 0;
+            down = 0;
+            up = 1;
+        } else if(key == 'a') {
+            right = 0;
+            left = 1;
+            down = 0;
+            up = 0;
+        } else if(key == 's') {
+            right = 0;
+            left = 0;
+            down = 1;
+            up = 0;
+        } else if(key == 'd') {
+            right = 1;
+            left = 0;
+            down = 0;
+            up = 0;
         }
-        sleep_ms(200);
+        sleep_ms(2);
     }
     while (1);
 

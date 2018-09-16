@@ -92,7 +92,7 @@ int main(int argc, char **argv)
 			hilbert(buf, n, +1);
 			blit(buf);
 		}
-		sleep_ms(200);
+		sleep_ms(0);
 	}
 	while (1);
 
