@@ -33,25 +33,13 @@ int main(int argc, char **argv)
 
 
         if(right == 1 && snakex == 639) {
-            right = 0;
-            left = 1;
-            down = 0;
-            up = 0;
+            snakex = 0;
         } else if(left == 1 && snakex == 0) {
-            right = 1;
-            left = 0;
-            down = 0;
-            up = 0;
+            snakex = 639;
         } else if(up == 1 && snakey == 0) {
-            right = 0;
-            left = 0;
-            down = 1;
-            up = 0;
+            snakey = 479;
         }else if(down == 1 && snakey == 479) {
-            right = 0;
-            left = 0;
-            down = 0;
-            up = 1;
+            snakey = 0;
         }
 
         if(right == 1 && snakex < 640)
@@ -65,29 +53,35 @@ int main(int argc, char **argv)
 
         key = getkey();
 
+        if(key == 27){
+            getkey();
+            key = getkey();
+        }
+
         if (key == 'q')
             break;
-        else if(key == 'w') {
+        else if(key == 'A') {
             right = 0;
             left = 0;
             down = 0;
             up = 1;
-        } else if(key == 'a') {
+        } else if(key == 'D') {
             right = 0;
             left = 1;
             down = 0;
             up = 0;
-        } else if(key == 's') {
+        } else if(key == 'B') {
             right = 0;
             left = 0;
             down = 1;
             up = 0;
-        } else if(key == 'd') {
+        } else if(key == 'C') {
             right = 1;
             left = 0;
             down = 0;
             up = 0;
         }
+
 
         sleep_ms(2);
     }
