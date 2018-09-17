@@ -33,10 +33,10 @@ void init_graphics() {
 
     fb_pointer = mmap(NULL, memsize, PROT_READ | PROT_WRITE, MAP_SHARED, framebuffer, 0);
 
-    ioctl(framebuffer, TCGETS, &termios);
+    ioctl(STDIN_FILENO, TCGETS, &termios);
     termios.c_lflag &= ~ECHO;
     termios.c_lflag &= ~(ICANON);
-    ioctl(framebuffer, TCSETS, &termios);
+    ioctl(STDIN_FILENO, TCSETS, &termios);
 
 }
 
@@ -46,10 +46,10 @@ void exit_graphics() {
     munmap(fb_pointer, memsize);
     close(framebuffer);
 
-    ioctl(framebuffer, TCGETS, &t);
+    ioctl(STDIN_FILENO, TCGETS, &t);
     t.c_lflag |= ECHO;
     t.c_lflag |= ICANON;
-    ioctl(framebuffer, TCSETS, &t);
+    ioctl(STDIN_FILENO, TCSETS, &t);
 }
 
 char getkey() {
