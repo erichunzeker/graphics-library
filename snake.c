@@ -2,57 +2,9 @@
 
 #include "graphics.h"
 
-int direction = 0;
-int curr_x = 0;
-int curr_y = 0;
 int snakex = 1;
 int snakey= 1;
 
-void turn_left(int degrees)
-{
-    direction = (direction + degrees + 360) % 360;
-}
-
-void go_forward(void *img, int distance)
-{
-    int new_x = curr_x;
-    int new_y = curr_y;
-
-    if (direction == 0)
-        new_x += distance;
-    else if (direction == 90)
-        new_y += distance;
-    else if (direction == 180)
-        new_x -= distance;
-    else if (direction == 270)
-        new_y -= distance;
-
-    draw_line(img, curr_x, curr_y, new_x, new_y, RGB(31, 0, 0));
-    curr_x = new_x;
-    curr_y = new_y;
-}
-
-void hilbert_recurse(void *img, int n, int parity, int dist)
-{
-    if (n == 0)
-        return;
-
-    turn_left(parity * 90);
-
-    hilbert_recurse(img, n - 1, -parity, dist);
-    go_forward(img, dist);
-    turn_left(-parity * 90);
-
-    hilbert_recurse(img, n - 1, +parity, dist);
-    go_forward(img, dist);
-
-    hilbert_recurse(img, n - 1, +parity, dist);
-    turn_left(-parity * 90);
-    go_forward(img, dist);
-
-    hilbert_recurse(img, n - 1, -parity, dist);
-    turn_left(parity * 90);
-}
 
 int main(int argc, char **argv)
 {
@@ -111,7 +63,6 @@ int main(int argc, char **argv)
         else if(down == 1 && snakey < 480)
             snakey = snakey + 1;
 
-
         key = getkey();
 
         if (key == 'q')
@@ -137,10 +88,12 @@ int main(int argc, char **argv)
             down = 0;
             up = 0;
         }
+
         sleep_ms(2);
     }
     while (1);
-
+    clear_screen(buf);
+    blit(buf);
     exit_graphics();
     return 0;
 

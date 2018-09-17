@@ -35,14 +35,14 @@ void init_graphics() {
 
     ioctl(framebuffer, TCGETS, &termios);
     termios.c_lflag &= ~ECHO;
-    termios.c_lflag &= ~ICANON;
+    termios.c_lflag &= ~(ICANON);
     ioctl(framebuffer, TCSETS, &termios);
 
 }
 
 void exit_graphics() {
     struct termios t;
-
+    clear_screen(fb_pointer);
     munmap(fb_pointer, memsize);
     close(framebuffer);
 
@@ -53,16 +53,20 @@ void exit_graphics() {
 }
 
 char getkey() {
-    fd_set fdSet;
-    FD_ZERO(&fdSet);
-    FD_SET(0, &fdSet);
-    struct timeval timeval1;
-    timeval1.tv_sec = 1;
+    fd_set rfds;
+    struct timeval tv;
+    int retval;
+
+    FD_ZERO(&rfds);
+    FD_SET(0, &rfds);
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
     char input;
-    //not setting a timeout because its unnecessary
-    if(select(STDIN_FILENO + 1, &fdSet, NULL, NULL, &timeval1) > 0 && read(0, &input, 1) > 0)
-        return input;
-    return 0;
+    retval = select(1, &rfds, NULL, NULL, &tv);
+
+    if(retval)
+        read(0, &input, sizeof(input));
+    return input;
 }
 
 void sleep_ms(long ms) {
@@ -72,7 +76,10 @@ void sleep_ms(long ms) {
 }
 
 void clear_screen(void *img) {
-    write(1, "\033[2J", 8);
+    size_t i;
+
+    for (i = 0; i < memsize; i++)
+        *((char*)(img) + i) = RGB(0, 0, 0);
 }
 
 void draw_pixel(void *img, int x, int y, color_t color) {
